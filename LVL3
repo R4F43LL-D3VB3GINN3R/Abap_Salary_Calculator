@@ -1,0 +1,83 @@
+REPORT ZESTUDOS1.
+
+TYPES: BEGIN OF GS_USER,                  "Estrutura Global"
+         LV_SALBASE    TYPE P DECIMALS 2, "Salário Base"
+         LV_EXTRAHRS   TYPE P DECIMALS 2, "Horas Extras"
+         LV_DEDUCTIONS TYPE P DECIMALS 2, "Deduções da Empresa"
+         LV_BONUS      TYPE P DECIMALS 2, "Bônus da Empresa"
+         LV_TRIBUTE    TYPE P DECIMALS 2, "Impostos do Governo"
+         LV_BRUTESAL   TYPE P DECIMALS 2, "Salário Bruto"
+         LV_TOTRIBUTE  TYPE P DECIMALS 2, "Total de Tributos"
+         LV_LIQUIDSAL  TYPE P DECIMALS 2, "Salário Líquido"
+         LV_BONUSTOT   TYPE P DECIMALS 2, "Bônus Total"
+       END OF GS_USER.
+
+DATA: LS_USER2 TYPE GS_USER. "Estrutura Local"
+
+START-OF-SELECTION.
+
+  PARAMETERS:                                                   "Entradas de Utilizador"
+    P_NAME  TYPE C LENGTH 15,                                   "Nome"
+    P_SALBA TYPE P DECIMALS 2,                                  "Salário Base"
+    P_EXTR  TYPE P DECIMALS 2.                                  "Horas Extras"
+
+SKIP 1.
+SELECTION-SCREEN BEGIN OF BLOCK RADIO1 WITH FRAME TITLE TEXT-001.
+  PARAMETERS:
+    DAY     TYPE BOOLEAN RADIOBUTTON GROUP GRP1 DEFAULT 'X',    "Radiobuttons baseados nos turnos de horas extras trabalhados"
+    EVENING TYPE BOOLEAN RADIOBUTTON GROUP GRP1,
+    NIGHT   TYPE BOOLEAN RADIOBUTTON GROUP GRP1,
+    HOLYDAY TYPE BOOLEAN RADIOBUTTON GROUP GRP1.
+SELECTION-SCREEN END OF BLOCK RADIO1.
+SKIP 1.
+  PARAMETERS:
+    P_DEDU  TYPE P DECIMALS 2,                                  "Deduções da Empresa"
+    P_BONU  TYPE P DECIMALS 2.                                  "Bônus da Empresa"
+
+  IF P_SALBA =< '760.00'.                             "Um controle de fluxo para definir as porcentagens em cima do Salário Base"
+    LS_USER2-LV_BONUSTOT = ( 3 / 100 ) * P_SALBA.
+  ELSEIF P_SALBA > '760.00' AND P_SALBA =< '1500.00'.
+    LS_USER2-LV_BONUSTOT = ( 2 / 100 ) * P_SALBA.
+  ELSE.
+    LS_USER2-LV_BONUSTOT = ( '1.5' / 100 ) * P_SALBA.
+  ENDIF.
+
+  IF P_SALBA =< '760.00'.                             "Um controle de fluxo para definir as tributações em cima do Salário Base"
+    LS_USER2-LV_TRIBUTE = ( '1.5' / 100 ) * P_SALBA.
+  ELSEIF P_SALBA > '760.00' AND P_SALBA =< '1500.00'.
+    LS_USER2-LV_TRIBUTE = ( 2 / 100 ) * P_SALBA.
+  ELSE.
+    LS_USER2-LV_BONUSTOT = ( 3 / 100 ) * P_SALBA.
+  ENDIF.
+
+  IF DAY = 'X'.           "Um controle de fluxo para calcular o valor da hora extra."
+    P_EXTR = P_EXTR * 2.
+  ELSEIF EVENING = 'X'.
+    P_EXTR = P_EXTR * '2.5'.
+  ELSEIF NIGHT = 'X'.
+    P_EXTR = P_EXTR * 3.
+  ELSEIF HOLYDAY = 'X'.
+    P_EXTR = P_EXTR * 4.
+  ELSE.
+    P_EXTR = P_EXTR * 1.
+  ENDIF.
+
+  LS_USER2-LV_SALBASE = P_SALBA.
+  LS_USER2-LV_EXTRAHRS = P_EXTR.
+  LS_USER2-LV_DEDUCTIONS = P_DEDU.
+  LS_USER2-LV_BONUS = P_BONU.
+  LS_USER2-LV_BRUTESAL = P_SALBA + P_EXTR.                                                          "Salário Bruto = Salário Base + Horas Extras"
+  LS_USER2-LV_TOTRIBUTE = P_DEDU + LS_USER2-LV_TRIBUTE.                                             "Total de Tributos = Deduções da Empresa + Impostos do Governo"
+  LS_USER2-LV_LIQUIDSAL = ( LS_USER2-LV_BRUTESAL + LS_USER2-LV_BONUSTOT ) - LS_USER2-LV_TOTRIBUTE.  "Salário Líquido = Salário Bruto + Bônus Total - Total de Tributos"
+
+  "Minha estrutura local recebe alguns dos dados inseridos pelo utilizador para efetuar os cálculos necessários."
+
+WRITE: / 'NAME: ', P_NAME.
+WRITE: / 'BASE SALARY: ', P_SALBA.
+WRITE: / 'EXTRA HOURS VALUE: +', P_EXTR.
+WRITE: / 'TOTAL TRIBUTE: -', LS_USER2-LV_TOTRIBUTE.
+WRITE: / 'BRUTE SALARY: ', LS_USER2-LV_BRUTESAL.
+WRITE: / 'BONUS SALARY: +', P_BONU.
+WRITE: / 'LIQUID SALARY: ', LS_USER2-LV_LIQUIDSAL.
+
+BREAK-POINT.
