@@ -90,3 +90,39 @@ on salary ranges. It offers a comprehensive example of dealing with various comp
 By incorporating additional complexities, this exercise will provide you with a robust understanding of ABAP programming in a practical payroll context.  
 
 ..............................................................................................................................................................................................................................
+
+LVL4  
+
+Let's further complicate the Advanced Salary Calculator exercise by introducing additional scenarios and more complex calculations. In this version, we will also consider contributions to social security and add a   functionality to calculate variable allowances based on employee performance.  
+  
+Prompt the user to input the following information:  
+  
+Monthly base salary  
+Overtime hours worked (in hours)  
+Deduction amount (e.g., taxes, health insurance, contributions)  
+Additional benefits (such as bonuses or incentives)  
+Tax rate (expressed as a decimal)  
+Social security contribution (expressed as a decimal)  
+Performance Allowance (expressed as a decimal)  
+Implement the following additional functionalities:  
+  
+Calculate the gross salary (base salary + value of overtime hours).  
+Calculate total deductions (deduction amount + calculated taxes + social security contribution).  
+Determine the bonus amount based on the gross salary and the bonus percentage.  
+Calculate the performance allowance based on the gross salary and the allowance percentage.  
+Calculate the net salary after deductions, applying the bonus, and including the performance allowance.  
+Present the following detailed results:  
+
+Employee Name  
+Base Salary  
+Overtime Hours  
+Total Deductions (Detailing taxes and social security contribution)  
+Gross Salary  
+Bonus Amount  
+Performance Allowance  
+Benefits  
+Net Salary   
+Create a progressive tax calculation:  
+
+Implement different tax brackets where the tax rate varies based on salary ranges. For example: up to $1000 = 10%, from $1001 to $2000 = 15%, above $2000 = 20%.  
+This exercise adds complexity to the salary calculator, including more variables and detailed calculations. You'll have the opportunity to deal with scenarios closer to reality and enhance your ABAP programming skills.  
