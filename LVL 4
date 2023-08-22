@@ -465,7 +465,7 @@ START-OF-SELECTION.
   "----------------------------"
   "----------------------------"
   "TRATAMENTO DE TABELA INTERNA"
-  "----------------------------"
+  "----------EXIBIÇÃO----------"
   "----------------------------"
 
 APPEND LS_SEGSOC TO LT_SEGSOC. "APÓS TODAS AS VARIÁVEIS DE NOSSA ESTRUTURA LOCAL ESTAREM PREENCHIDAS, SIMPLESMENTE INSERIMOS ELA COMO UMA LINHA DENTRO DE NOSSA TABELA INTERNA.
@@ -484,3 +484,23 @@ APPEND LS_SEGSOC TO LT_SEGSOC. "APÓS TODAS AS VARIÁVEIS DE NOSSA ESTRUTURA LOC
       CATCH CX_SALV_MSG.
         MESSAGE 'Error to display ALV Report' TYPE 'S' DISPLAY LIKE 'I'.
     ENDTRY.
+
+"CASO OPTE POR NÃO EXIBIR O RELATÓRIO ALV, AQUI ESTÁ A EXIBIÇÃO PADRÃO PELA INSTRUÇÃO WRITE."
+                LOOP AT LT_SEGSOC INTO LS_SEGSOC.
+                  WRITE: / 'NOME: ',LS_SEGSOC-LV_NOME,
+                         / 'SALÁRIO BASE: ',LS_SEGSOC-LV_SALBASE,
+                         / 'SALÁRIO BRUTO: ',LS_SEGSOC-LV_SALBRUTO,
+                         / 'SALÁRIO LÍQUIDO: ',LS_SEGSOC-LV_SALIQ,
+                         / 'SEGURANÇA SOCIAL: ',LS_SEGSOC-LV_SEGSOC,
+                         / 'DIREITO A PENSÃO: ',LS_SEGSOC-LV_PENSAO,
+                         / 'TIPO DE CONTRATO: ',LS_SEGSOC-LV_TIPOCONTR,
+                         / 'SUBSÍDIO DESEMPREGO: ',LS_SEGSOC-LV_SUBDES,
+                         / 'VALOR DO SUBSÍDIO: ',LS_SEGSOC-LV_VALSUB,
+                         / 'DURAÇÃO DO SUBSÍDIO: ',LS_SEGSOC-LV_TEMSUB,
+                         / 'PLANO DE SAÚDE PRIVADO: ',LS_SEGSOC-LV_PLANSAU,
+                         / 'CONTRIBUIÇÃO SINDICAL: ',LS_SEGSOC-LV_CONTRSIN,
+                         / 'VALE REFEILÃO: ', LS_SEGSOC-LV_VALEREF,
+                         / 'VALE TRANSPORTE: ',LS_SEGSOC-LV_VALETRS,
+                         / 'HORAS EXTRAS: ',LS_SEGSOC-LV_HORAEXTR,
+                         / 'TRIBUTAÇÕES/DEDUÇÕES: ',LS_SEGSOC-LV_DEDUCT.
+                ENDLOOP.
